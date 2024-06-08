@@ -1,3 +1,4 @@
+//génère un modèle pour un photographe en particulier
 function photographerTemplate(data) {
     const { name, portrait } = data;
 
