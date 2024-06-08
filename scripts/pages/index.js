@@ -2,7 +2,7 @@
 async function getPhotographers() {
     try {
          // Utilise fetch pour envoyer une requête au fichier 'photographers.json' et attend la réponse
-        const response = await fetch('datas/photographers.json');
+        const response = await fetch('data/photographers.json');
 
          // Convertit la réponse en format JSON et attend que cette opération se termine
          //await indique que la fonction doit attendre que la requête soit complétée avant de continuer.
