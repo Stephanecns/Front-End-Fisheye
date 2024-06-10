@@ -1,39 +1,49 @@
 // Fonction pour créer un modèle de photographe à partir des données
 function photographerTemplate(data) {
-    // Déstructure les données pour obtenir les propriétés nécessaires
     const { name, portrait, id, tagline, city, country, price } = data;
-
-    // Construit le chemin de l'image du photographe
     const picture = `assets/photographers/${portrait}`;
 
-    // Fonction pour créer l'élément DOM de la carte du photographe
     function getUserCardDOM() {
-        const article = document.createElement('article'); // Crée un élément article
-        const img = document.createElement('img'); // Crée un élément image
-        img.setAttribute("src", picture); // Définit l'attribut src de l'image avec le chemin de l'image
-        img.setAttribute("alt", name); // Définit l'attribut alt de l'image avec le nom du photographe
-        const h2 = document.createElement('h2'); // Crée un élément h2 pour le nom du photographe
+        const article = document.createElement('article');
+        article.classList.add('photographer-card'); // Ajoute une classe CSS
+
+        const link = document.createElement('a');
+        link.setAttribute('href', `photographer.html?id=${id}`);
+        link.setAttribute('aria-label', `Voir le profil de ${name}`);
+        link.setAttribute('tabindex', '0'); // Rendre le lien focusable
+        link.classList.add('photographer-link'); // Ajoute une classe CSS
+
+        const img = document.createElement('img');
+        img.setAttribute("src", picture);
+        img.setAttribute("alt", ""); // Texte alternatif vide pour l'accessibilité
+        img.classList.add('photographer-portrait'); // Ajoute une classe CSS
+
+        const h2 = document.createElement('h2');
         h2.textContent = name;
+        h2.classList.add('photographer-name'); // Ajoute une classe CSS
 
-        const pTagline = document.createElement('p'); // Crée un élément p pour le slogan du photographe
+        const pTagline = document.createElement('p');
         pTagline.textContent = tagline;
+        pTagline.classList.add('photographer-tagline'); // Ajoute une classe CSS
 
-        const pLocation = document.createElement('p'); // Crée un élément p pour la localisation du photographe
+        const pLocation = document.createElement('p');
         pLocation.textContent = `${city}, ${country}`;
+        pLocation.classList.add('photographer-location'); // Ajoute une classe CSS
 
-        const pPrice = document.createElement('p'); // Crée un élément p pour le prix du photographe
+        const pPrice = document.createElement('p');
         pPrice.textContent = `${price}€/heure`;
+        pPrice.classList.add('photographer-price'); // Ajoute une classe CSS
 
-        // Ajoute tous les éléments créés à l'article
-        article.appendChild(img);
-        article.appendChild(h2);
-        article.appendChild(pTagline);
+        link.appendChild(img);
+        link.appendChild(h2);
+
+        article.appendChild(link);
         article.appendChild(pLocation);
+        article.appendChild(pTagline);
         article.appendChild(pPrice);
 
-        return article; // Retourne l'élément article
+        return article;
     }
 
-    // Retourne un objet contenant le nom, l'image et la fonction pour obtenir l'élément DOM de la carte
     return { name, picture, getUserCardDOM };
 }
