@@ -146,6 +146,9 @@ async function displayPhotographerData() {
         const photographer = photographerTemplate(photographerData);
         photographer.getProfileDOM();
 
+         // Mettre à jour l'élément avec le nom du photographe
+         document.querySelector('.photographer-name-in-modal').textContent = photographerData.name;
+
         // Filtrer les médias du photographe
         const photographerMedia = media.filter(m => m.photographerId === photographerId);
 

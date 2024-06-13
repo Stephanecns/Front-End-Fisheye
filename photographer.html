@@ -20,25 +20,37 @@
         <button class="contact_button" onclick="displayModal()">Contactez-moi</button>
         <img class="photographer-portrait" alt="Portrait du photographe">
       </div>
-      <section class="photographer-works">
+      <div class="photographer-works">
         <div class="media-gallery">
 
         </div>
-      </section>
+      </div>
     </main>
-    <div id="contact_modal">
+    <div id="contact_modal" aria-hidden="true" role="dialog" aria-labelledby="modal-title" aria-modal="true">
 			<div class="modal">
 				<header>
-          <h2>Contactez-moi</h2>
+          <h2 id="modal-title">Contactez-moi <span class="photographer-name-in-modal"></span></h2>
           <img src="assets/icons/close.svg" onclick="closeModal()" alt="Close icon">
         </header>
-				<form>
-					<div>
-						<label>Prénom</label>
-						<input>
-					</div>
-          <button class="contact_button">Envoyer</button>
-				</form>
+        <form id="contactForm">
+          <div class="formData">
+              <label for="firstNameUser">Prénom</label>
+              <input class="text-control" type="text" id="firstNameUser" name="firstName">
+          </div>
+          <div class="formData">
+              <label for="lastNameUser">Nom</label>
+              <input class="text-control" type="text" id="lastNameUser" name="lastName">
+          </div>
+          <div class="formData">
+              <label for="emailUser">E-mail</label>
+              <input class="text-control" type="email" id="emailUser" name="emailAddress">
+          </div>
+          <div class="formData">
+              <label for="message">Votre message</label>
+              <textarea name="message" id="message"></textarea>
+          </div>
+          <button type="submit" class="contact_button">Envoyer</button>
+      </form>
 			</div>
 		</div>
     <script src="/scripts/pages/photographer.js"></script>
