@@ -1,60 +1,86 @@
 <!DOCTYPE html>
 <html lang="fr">
-  <head>
-    <link href="css/style.css" rel="stylesheet" type="text/css">
-    <meta charset="utf-8">
-    <link rel="icon" type="image/png" href="assets/favicon.png">
-    <link href="https://fonts.googleapis.com/css?family=DM+Sans&display=swap" rel="stylesheet">
-    <title>Fisheye - photographe </title>
-  </head>
-  <body>
-    <header>
-      <a href="./index.html">
+
+<head>
+  <link href="css/style.css" rel="stylesheet" type="text/css">
+  <meta charset="utf-8">
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <link href="https://fonts.googleapis.com/css?family=DM+Sans&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/4bff0d411a.js" crossorigin="anonymous"></script>
+  <title>Fisheye - photographe </title>
+</head>
+
+<body>
+  <header>
+    <a href="./index.html">
       <img src="assets/images/logo.png" class="logo" alt="fisheye logo">
     </a>
-    </header>
-    <main id="main">
-      <div class="photograph-header">
-        <div class="photographer-info">
-        </div>
-        <button class="contact_button" onclick="displayModal()">Contactez-moi</button>
-        <img class="photographer-portrait" alt="Portrait du photographe">
+  </header>
+  <main id="main">
+    <div class="photograph-header">
+      <div class="photographer-info">
       </div>
-      <div class="photographer-works">
-        <div class="media-gallery">
+      <button class="contact_button" onclick="displayModal()">Contactez-moi</button>
+      <img class="photographer-portrait" alt="Portrait du photographe">
+    </div>
 
-        </div>
+    <!-- Dislay media -->  
+    <div class="photographer-works">
+      <div class="media-gallery">
       </div>
-    </main>
-    <div id="contact_modal" aria-hidden="true" role="dialog" aria-labelledby="modal-title" aria-modal="true">
-			<div class="modal">
-				<header>
-          <h2 id="modal-title">Contactez-moi <span class="photographer-name-in-modal"></span></h2>
-          <img src="assets/icons/close.svg" onclick="closeModal()" alt="Close icon">
-        </header>
-        <form id="contactForm">
-          <div class="formData">
-              <label for="firstNameUser">Prénom</label>
-              <input class="text-control" type="text" id="firstNameUser" name="firstName">
-          </div>
-          <div class="formData">
-              <label for="lastNameUser">Nom</label>
-              <input class="text-control" type="text" id="lastNameUser" name="lastName">
-          </div>
-          <div class="formData">
-              <label for="emailUser">E-mail</label>
-              <input class="text-control" type="email" id="emailUser" name="emailAddress">
-          </div>
-          <div class="formData">
-              <label for="message">Votre message</label>
-              <textarea name="message" id="message"></textarea>
-          </div>
-          <button type="submit" class="contact_button">Envoyer</button>
+    </div>
+  </main>
+
+  <!-- Modal contact + form -->
+  <div id="contact_modal" aria-hidden="true" role="dialog" aria-labelledby="modal-title" aria-modal="true">
+    <div class="modal">
+      <header>
+        <h2 id="modal-title">Contactez-moi <span class="photographer-name-in-modal"></span></h2>
+        <img src="assets/icons/close.svg" onclick="closeModal()" alt="Close icon">
+      </header>
+      <form id="contactForm">
+        <div class="formData">
+          <label for="firstNameUser">Prénom</label>
+          <input class="text-control" type="text" id="firstNameUser" name="firstName">
+        </div>
+        <div class="formData">
+          <label for="lastNameUser">Nom</label>
+          <input class="text-control" type="text" id="lastNameUser" name="lastName">
+        </div>
+        <div class="formData">
+          <label for="emailUser">E-mail</label>
+          <input class="text-control" type="email" id="emailUser" name="emailAddress">
+        </div>
+        <div class="formData">
+          <label for="message">Votre message</label>
+          <textarea name="message" id="message"></textarea>
+        </div>
+        <button type="submit" class="contact_button">Envoyer</button>
       </form>
-			</div>
-		</div>
-    <script src="/scripts/pages/photographer.js"></script>
-    <script src="/scripts/utils/contactForm.js"></script>
-  </body>
+    </div>
+  </div>
+
+  <!-- Lightbox HTML -->
+  <div id="lightbox-container">
+    <div id="lightbox" class="modal" aria-hidden="true" role="dialog" aria-label="Image closeup view">
+        <i class="fa-solid fa-xmark iconColor" onclick="closeLightbox()" aria-label="Close icon"></i>
+        <div class="lightbox__prev" aria-label="Previous image" onclick="prevMedia()">
+            <i class="fa-solid fa-chevron-left"></i>
+        </div>
+        <div class="lightbox__next" aria-label="Next image" onclick="nextMedia()">
+            <i class="fa-solid fa-chevron-right"></i>
+        </div>
+        <div class="lightbox__content"></div>
+        <div class="lightbox__caption" aria-live="polite"></div>
+    </div>
+</div>
+
+  
+
+
+  <script src="/scripts/pages/photographer.js"></script>
+  <script src="/scripts/utils/contactForm.js"></script>
+</body>
+
 </html>
 <!--Ce fichier définit la structure de la page de profil d'un photographe.-->

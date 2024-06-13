@@ -1,3 +1,20 @@
+// Fonction pour récupérer les données des photographes depuis un fichier JSON
+async function getPhotographers() {
+    try {
+        const response = await fetch('data/photographers.json');
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        console.log("Données récupérées dans getPhotographers :", data);
+        return data; // Assurez-vous que l'objet renvoyé contient photographers et media
+    } catch (error) {
+        console.error("Erreur lors de la récupération des données : ", error);
+    }
+}
+
+
+
 // Fonction pour créer un modèle de photographe à partir des données
 function photographerTemplate(data) {
     const { name, portrait, id, tagline, city, country, price } = data;
@@ -44,7 +61,7 @@ function photographerTemplate(data) {
 
         return article;
     }
-
+// Fonction pour créer et insérer dynamiquement des éléments HTML dans la section d'en-tête d'une page de profil de photographe
     function getProfileDOM() {
         const header = document.querySelector('.photograph-header .photographer-info');
 
@@ -78,45 +95,7 @@ function photographerTemplate(data) {
     return { name, picture, getUserCardDOM, getProfileDOM };
 }
 
-// Fonction pour récupérer les données des photographes depuis un fichier JSON
-async function getPhotographers() {
-    try {
-        const response = await fetch('data/photographers.json');
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        console.log("Données récupérées dans getPhotographers :", data);
-        return data; // Assurez-vous que l'objet renvoyé contient photographers et media
-    } catch (error) {
-        console.error("Erreur lors de la récupération des données : ", error);
-    }
-}
 
-// Les médias filtrés sont affichés sur la page en utilisant mediaFactory
-function mediaFactory(media, photographerName) {
-    const basePath = `assets/FishEye_Photos/Sample Photos/${photographerName}/`;
-
-    if (media.image) {
-        return `
-            <div class="media-item">
-                <img  class="media-image" src="${basePath}${media.image}" alt="${media.title}">
-                <p class="media-title">${media.title}</p>
-            </div>
-        `;
-    } else if (media.video) {
-        return `
-            <div class="media-item">
-                <video  class="media-video" controls>
-                    <source src="${basePath}${media.video}" type="video/mp4">
-                    Votre navigateur ne supporte pas la vidéo.
-                </video>
-                <p  class="media-title">${media.title}</p>
-            </div>
-        `;
-    }
-    return '';
-}
 
 // Fonction pour afficher les informations du photographe sur la page
 async function displayPhotographerData() {
@@ -174,7 +153,133 @@ async function displayPhotographerData() {
     }
 }
 
-// Initialiser les données du photographe sur la page
-document.addEventListener('DOMContentLoaded', () => {
-    displayPhotographerData();
+
+// Les médias filtrés sont affichés sur la page en utilisant mediaFactory
+function mediaFactory(media, photographerName) {
+    const basePath = `assets/FishEye_Photos/Sample Photos/${photographerName}/`;
+
+    if (media.image) {
+        return `
+            <div class="media-item">
+                <img  class="media-image" src="${basePath}${media.image}" alt="${media.title}">
+                <p class="media-title">${media.title}</p>
+            </div>
+        `;
+    } else if (media.video) {
+        return `
+            <div class="media-item">
+                <video  class="media-video" controls>
+                    <source src="${basePath}${media.video}" type="video/mp4">
+                    Votre navigateur ne supporte pas la vidéo.
+                </video>
+                <p  class="media-title">${media.title}</p>
+            </div>
+        `;
+    }
+    return '';
+}
+
+// Variables pour stocker l'état de la lightbox
+let currentMediaIndex = -1;
+let currentMediaList = [];
+
+// Fonction pour ouvrir la lightbox
+function openLightbox(index) {
+    const lightbox = document.getElementById('lightbox-container');
+    lightbox.style.display = 'block';
+    lightbox.setAttribute('aria-hidden', 'false');
+    showMedia(index);
+}
+
+// Fonction pour fermer la lightbox
+function closeLightbox() {
+    const lightbox = document.getElementById('lightbox-container');
+    lightbox.style.display = 'none';
+    lightbox.setAttribute('aria-hidden', 'true');
+}
+
+// Fonction pour afficher un média spécifique dans la lightbox
+function showMedia(index) {
+    const lightboxContent = document.querySelector('.lightbox__content');
+    const lightboxCaption = document.querySelector('.lightbox__caption');
+    const media = currentMediaList[index];
+
+    // Assurez-vous d'utiliser les bonnes propriétés des objets médias
+    if (media.type === 'image') {
+        lightboxContent.innerHTML = `<img src="${media.src}" alt="${media.title}">`;
+    } else if (media.type === 'video') {
+        lightboxContent.innerHTML = `<video controls>
+                                        <source src="${media.src}" type="video/mp4">
+                                        Votre navigateur ne supporte pas la vidéo.
+                                     </video>`;
+    }
+
+    lightboxCaption.textContent = media.title;
+    currentMediaIndex = index;
+}
+
+// Fonction pour afficher le média précédent
+function prevMedia() {
+    if (currentMediaIndex > 0) {
+        showMedia(currentMediaIndex - 1);
+    }
+}
+
+// Fonction pour afficher le média suivant
+function nextMedia() {
+    if (currentMediaIndex < currentMediaList.length - 1) {
+        showMedia(currentMediaIndex + 1);
+    }
+}
+
+// Ajout des événements de navigation clavier
+document.addEventListener('keydown', function(event) {
+    const lightbox = document.getElementById('lightbox');
+    if (lightbox.style.display === 'block') {
+        if (event.key === 'ArrowLeft') {
+            prevMedia();
+        } else if (event.key === 'ArrowRight') {
+            nextMedia();
+        } else if (event.key === 'Escape') {
+            closeLightbox();
+        }
+    }
+});
+
+// Fonction pour initialiser les médias pour la lightbox
+function initLightboxMedia() {
+    const mediaElements = document.querySelectorAll('.media-item');
+    currentMediaList = [];
+
+    mediaElements.forEach((mediaElement, index) => {
+        const img = mediaElement.querySelector('img');
+        const video = mediaElement.querySelector('video');
+        const title = mediaElement.querySelector('.media-title').textContent;
+
+        if (img) {
+            currentMediaList.push({
+                src: img.src,
+                title: title,
+                type: 'image'
+            });
+
+            img.addEventListener('click', () => openLightbox(index));
+        } else if (video) {
+            const src = video.querySelector('source').src;
+            currentMediaList.push({
+                src: src,
+                title: title,
+                type: 'video'
+            });
+
+            video.addEventListener('click', () => openLightbox(index));
+        }
+    });
+}
+
+// Appeler initLightboxMedia après que tous les médias soient rendus
+document.addEventListener('DOMContentLoaded', function () {
+    displayPhotographerData().then(() => {
+        initLightboxMedia();
+    });
 });

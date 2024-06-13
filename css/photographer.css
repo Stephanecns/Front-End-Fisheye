@@ -95,6 +95,7 @@
     border-radius: 5px;
     background-color: #DB8876;
     width: 669px;
+    height: 950px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -149,7 +150,71 @@ form input {
 
 textarea {
     resize: none;
-    width: 100%; 
+    width: 100%;
     height: 170px;
-    box-sizing: border-box; 
+    box-sizing: border-box;
+}
+
+/* Styles pour la lightbox */
+#lightbox-container {
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    overflow: auto;
+    display: none;
+}
+
+#lightbox {
+    position: relative;
+}
+
+#lightbox.modal {
+    background-color: #fff;
+    width: 1240px;
+}
+
+.iconColor {
+    color: #901C1C;
+    font-size: 72px;
+    cursor: pointer;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+
+
+.lightbox__prev,
+.lightbox__next {
+    cursor: pointer;
+    font-size: 96px;
+    color: #901C1C;
+    position: absolute;
+}
+
+.lightbox__prev {
+    top: 50%;
+    left: 2%;
+}
+
+.lightbox__next {
+    top: 50%;
+    left: 90%;
+}
+
+
+.lightbox__content img,
+.lightbox__content video {
+    width: 1000px;
+    border-radius: 5px;
+    height: 890px;
+    object-fit: cover;
+}
+
+.lightbox__caption {
+    margin-top: 10px;
+    color: #901C1C;
+    font-size: 24px;
 }
