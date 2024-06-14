@@ -80,14 +80,9 @@ function photographerTemplate(data) {
         portraitElement.setAttribute("alt", `Portrait de ${name}`);
         portraitElement.classList.add('photographer-portrait'); // Ajoute une classe CSS
 
-        const priceElement = document.createElement('p');
-        priceElement.textContent = `${price}€/jour`;
-        priceElement.classList.add('photographer-price'); // Ajoute une classe CSS
-
         header.appendChild(nameElement);
         header.appendChild(locationElement);
         header.appendChild(taglineElement);
-        header.appendChild(priceElement);
     }
 
     return { name, picture, getUserCardDOM, getProfileDOM };
@@ -125,31 +120,24 @@ async function displayPhotographerData() {
         document.querySelector('.photographer-name-in-modal').textContent = photographerData.name;
 
         // Filtrer les médias du photographe
-        const photographerMedia = media.filter(m => m.photographerId === photographerId);
+        let photographerMedia = media.filter(m => m.photographerId === photographerId);
 
-        // Loguer les médias filtrés pour débogage
-        console.log(`Médias pour le photographe ${photographerData.name} (ID: ${photographerId}):`, photographerMedia);
+        // Trier les médias par défaut (par popularité)
+        photographerMedia = sortMedia(photographerMedia, 'popularity');
 
-        // Afficher les réalisations du photographe
-        const mediaGallery = document.querySelector('.media-gallery');
-        if (mediaGallery) {
-            mediaGallery.innerHTML = ''; // Clear existing content if any
-            photographerMedia.forEach(media => {
-                // Loguer chaque média traité pour débogage
-                console.log(`Ajout du média :`, media);
+        // Afficher les médias triés
+        displaySortedMedia(photographerMedia, photographerData.name);
 
-                const mediaElement = mediaFactory(media, photographerData.name);
-                mediaGallery.innerHTML += mediaElement;
-            });
-
-            initLightboxMedia();
-        } else {
-            console.error("L'élément media-gallery est introuvable");
-        }
-
-        // Afficher le prix et les likes totaux
         document.getElementById('price-per-day').textContent = `${photographerData.price}€ / jour`;
         updateTotalLikes();
+
+        // Ajoutez l'événement de tri
+        document.getElementById('sort-by').addEventListener('change', (event) => {
+            const sortBy = event.target.value;
+            const sortedMedia = sortMedia(photographerMedia, sortBy);
+            displaySortedMedia(sortedMedia, photographerData.name);
+        });
+
     } else {
         console.error("Photographe non trouvé"); // Affiche une erreur si le photographe n'est pas trouvé
     }
@@ -310,6 +298,33 @@ function initLightboxMedia() {
             video.addEventListener('click', () => openLightbox(index));
         }
     });
+}
+
+// Fonction de tri des médias
+function sortMedia(media, sortBy) {
+    switch (sortBy) {
+        case 'popularity':
+            return media.sort((a, b) => b.likes - a.likes);
+        case 'date':
+            return media.sort((a, b) => new Date(b.date) - new Date(a.date));
+        case 'title':
+            return media.sort((a, b) => a.title.localeCompare(b.title));
+        default:
+            return media;
+    }
+}
+
+// Fonction pour afficher les médias triés
+function displaySortedMedia(media, photographerName) {
+    const mediaGallery = document.querySelector('.media-gallery');
+    mediaGallery.innerHTML = '';
+
+    media.forEach(m => {
+        const mediaElement = mediaFactory(m, photographerName);
+        mediaGallery.innerHTML += mediaElement;
+    });
+
+    initLightboxMedia();
 }
 
 // Appeler initLightboxMedia après que tous les médias soient rendus
