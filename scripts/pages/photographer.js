@@ -13,8 +13,6 @@ async function getPhotographers() {
     }
 }
 
-
-
 // Fonction pour créer un modèle de photographe à partir des données
 function photographerTemplate(data) {
     const { name, portrait, id, tagline, city, country, price } = data;
@@ -61,7 +59,7 @@ function photographerTemplate(data) {
 
         return article;
     }
-// Fonction pour créer et insérer dynamiquement des éléments HTML dans la section d'en-tête d'une page de profil de photographe
+
     function getProfileDOM() {
         const header = document.querySelector('.photograph-header .photographer-info');
 
@@ -95,8 +93,6 @@ function photographerTemplate(data) {
     return { name, picture, getUserCardDOM, getProfileDOM };
 }
 
-
-
 // Fonction pour afficher les informations du photographe sur la page
 async function displayPhotographerData() {
     const data = await getPhotographers(); // Récupère les données des photographes et des médias
@@ -125,8 +121,8 @@ async function displayPhotographerData() {
         const photographer = photographerTemplate(photographerData);
         photographer.getProfileDOM();
 
-         // Mettre à jour l'élément avec le nom du photographe
-         document.querySelector('.photographer-name-in-modal').textContent = photographerData.name;
+        // Mettre à jour l'élément avec le nom du photographe
+        document.querySelector('.photographer-name-in-modal').textContent = photographerData.name;
 
         // Filtrer les médias du photographe
         const photographerMedia = media.filter(m => m.photographerId === photographerId);
@@ -145,38 +141,77 @@ async function displayPhotographerData() {
                 const mediaElement = mediaFactory(media, photographerData.name);
                 mediaGallery.innerHTML += mediaElement;
             });
+
+            initLightboxMedia();
         } else {
             console.error("L'élément media-gallery est introuvable");
         }
+
+        // Afficher le prix et les likes totaux
+        document.getElementById('price-per-day').textContent = `${photographerData.price}€ / jour`;
+        updateTotalLikes();
     } else {
         console.error("Photographe non trouvé"); // Affiche une erreur si le photographe n'est pas trouvé
     }
 }
 
-
-// Les médias filtrés sont affichés sur la page en utilisant mediaFactory
+// Fonction pour créer un élément média avec le nombre de likes et le bouton de like
 function mediaFactory(media, photographerName) {
     const basePath = `assets/FishEye_Photos/Sample Photos/${photographerName}/`;
+    const mediaType = media.image ? 'image' : 'video';
+    const mediaSrc = media.image ? `${basePath}${media.image}` : `${basePath}${media.video}`;
 
-    if (media.image) {
-        return `
-            <div class="media-item">
-                <img  class="media-image" src="${basePath}${media.image}" alt="${media.title}">
-                <p class="media-title">${media.title}</p>
-            </div>
-        `;
-    } else if (media.video) {
-        return `
-            <div class="media-item">
-                <video  class="media-video" controls>
-                    <source src="${basePath}${media.video}" type="video/mp4">
+    return `
+        <div class="media-item" data-id="${media.id}">
+            ${mediaType === 'image' ? `<img class="media-image" src="${mediaSrc}" alt="${media.title}" onclick="openLightbox(${media.id})">` : `
+                <video class="media-video" controls onclick="openLightbox(${media.id})">
+                    <source src="${mediaSrc}" type="video/mp4">
                     Votre navigateur ne supporte pas la vidéo.
                 </video>
-                <p  class="media-title">${media.title}</p>
+            `}
+            <div class="media-info">
+                <p class="media-title">${media.title}</p>
+                <div class="media-likes">
+                    <span class="media-likes-count">${media.likes}</span>
+                    <i class="fa-solid fa-heart" aria-label="likes" onclick="handleLike(event)"></i>
+                </div>
             </div>
-        `;
+        </div>
+    `;
+}
+
+// Fonction pour gérer l'incrémentation des likes
+function handleLike(event) {
+    const likeElement = event.target;
+    const likesCountElement = likeElement.previousElementSibling;
+    const likesCount = parseInt(likesCountElement.textContent);
+
+    if (!likeElement.classList.contains('liked')) {
+        likesCountElement.textContent = likesCount + 1;
+        likeElement.classList.add('liked');
+        likesCountElement.classList.add('liked');
+        updateTotalLikes();
     }
-    return '';
+}
+
+// Fonction pour mettre à jour les likes des médias
+function updateMediaLikes(mediaId, newLikesCount) {
+    const mediaElement = document.querySelector(`.media-item[data-id='${mediaId}'] .media-likes-count`);
+    if (mediaElement) {
+        mediaElement.textContent = newLikesCount;
+    }
+}
+
+// Fonction pour calculer et mettre à jour le nombre total de likes
+function updateTotalLikes() {
+    const likesElements = document.querySelectorAll('.media-likes-count');
+    let totalLikes = 0;
+
+    likesElements.forEach(likeElement => {
+        totalLikes += parseInt(likeElement.textContent);
+    });
+
+    document.getElementById('total-likes-count').textContent = totalLikes;
 }
 
 // Variables pour stocker l'état de la lightbox
@@ -234,7 +269,7 @@ function nextMedia() {
 
 // Ajout des événements de navigation clavier
 document.addEventListener('keydown', function(event) {
-    const lightbox = document.getElementById('lightbox');
+    const lightbox = document.getElementById('lightbox-container');
     if (lightbox.style.display === 'block') {
         if (event.key === 'ArrowLeft') {
             prevMedia();

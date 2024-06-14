@@ -73,7 +73,7 @@
 
 .media-title {
     color: #901C1C;
-    font-size: 24px;
+    font-size: 20px;
     cursor: pointer;
 }
 
@@ -217,4 +217,74 @@ textarea {
     margin-top: 10px;
     color: #901C1C;
     font-size: 24px;
+}
+
+
+/* Styles pour l'encart en bas de page */
+/* Styles pour l'encart fixe en bas de la page */
+.total-likes-price {
+    position: fixed;
+    bottom: 0;
+    left: 79%;
+    transform: translateX(-50%);
+    width: 376px;
+    height: 89px;
+    border-radius: 5px;
+    background: #DB8876;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.total-likes-price #total-likes-count,
+.total-likes-price #price-per-day {
+    color: #000;
+    font-family: "DM Sans";
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+
+.total-likes i {
+    color: #000;
+    margin-left: 10px;
+    font-size: 21px;
+}
+
+#price-per-day {
+    color: #000;
+    text-align: center;
+    font-family: "DM Sans";
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+
+/* Styles pour les médias */
+.media-info {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    width: 344px;
+}
+
+.media-likes {
+    display: flex;
+    align-items: first baseline;
+}
+
+.media-likes-count {
+    margin-right: 8px;
+}
+
+
+.fa-heart {
+    color: #901C1C;
+    cursor: pointer;
+}
+
+.media-likes-count.liked {
+    color: #901C1C;
 }

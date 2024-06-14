@@ -24,7 +24,16 @@
       <img class="photographer-portrait" alt="Portrait du photographe">
     </div>
 
-    <!-- Dislay media -->  
+    <div class="total-likes-price">
+      <span class="total-likes">
+        <span id="total-likes-count"></span>
+        <i class="fa-solid fa-heart"></i>
+      </span>
+      <span id="price-per-day"></span>
+    </div>
+
+
+    <!-- Dislay media -->
     <div class="photographer-works">
       <div class="media-gallery">
       </div>
@@ -63,19 +72,19 @@
   <!-- Lightbox HTML -->
   <div id="lightbox-container">
     <div id="lightbox" class="modal" aria-hidden="true" role="dialog" aria-label="Image closeup view">
-        <i class="fa-solid fa-xmark iconColor" onclick="closeLightbox()" aria-label="Close icon"></i>
-        <div class="lightbox__prev" aria-label="Previous image" onclick="prevMedia()">
-            <i class="fa-solid fa-chevron-left"></i>
-        </div>
-        <div class="lightbox__next" aria-label="Next image" onclick="nextMedia()">
-            <i class="fa-solid fa-chevron-right"></i>
-        </div>
-        <div class="lightbox__content"></div>
-        <div class="lightbox__caption" aria-live="polite"></div>
+      <i class="fa-solid fa-xmark iconColor" onclick="closeLightbox()" aria-label="Close icon"></i>
+      <div class="lightbox__prev" aria-label="Previous image" onclick="prevMedia()">
+        <i class="fa-solid fa-chevron-left"></i>
+      </div>
+      <div class="lightbox__next" aria-label="Next image" onclick="nextMedia()">
+        <i class="fa-solid fa-chevron-right"></i>
+      </div>
+      <div class="lightbox__content"></div>
+      <div class="lightbox__caption" aria-live="polite"></div>
     </div>
-</div>
+  </div>
 
-  
+
 
 
   <script src="/scripts/pages/photographer.js"></script>
