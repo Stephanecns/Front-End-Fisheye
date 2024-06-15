@@ -21,23 +21,23 @@
   <main id="main">
 
     <!-- Présentation phtographe-->
-    <div class="photograph-header">
+    <section class="photograph-header">
       <div class="photographer-info">
       </div>
-      <button class="contact_button" onclick="displayModal()">Contactez-moi</button>
-    </div>
+      <button class="contact_button">Contactez-moi</button>
+    </section>
 
     <!-- encart le tarif journalier + likes-->
-    <div class="total-likes-price">
+    <section class="total-likes-price">
       <span class="total-likes">
         <span id="total-likes-count"></span>
         <em class="fa-solid fa-heart"></em>
       </span>
       <span id="price-per-day"></span>
-    </div>
+    </section>
 
-    <!-- Dislay media -->
-    <div class="photographer-works">
+    <!--  Afficher les médias -->
+    <section  class="photographer-works">
       <div class="sort-menu">
         <label for="sort-by">Trier par</label>
         <select id="sort-by" aria-label="Order by">
@@ -48,7 +48,7 @@
       </div>
       <div class="media-gallery">
       </div>
-    </div>
+    </section >
 
   </main>
 
@@ -57,7 +57,7 @@
     <div class="modal">
       <header>
         <h2 id="modal-title">Contactez-moi <span class="photographer-name-in-modal"></span></h2>
-        <img src="assets/icons/close.svg" alt="Close icon">
+        <img src="assets/icons/close.svg" alt="Close icon" aria-label="Fermer le formulaire">
       </header>
       <form id="contactForm">
         <div class="formData">
@@ -83,7 +83,8 @@
 
   <!-- Lightbox HTML -->
   <div id="lightbox-container">
-    <div id="lightbox" class="modal" aria-hidden="true" role="dialog" aria-label="Image closeup view">
+    <div id="lightbox" class="modal" aria-hidden="true" role="dialog" aria-describedby="lightbox-description" aria-label="Image closeup view">
+      <p id="lightbox-description" class="sr-only">Utilisez les flèches gauche et droite pour naviguer entre les images, et échappe pour fermer.</p>
       <em class="fa-solid fa-xmark iconColor" aria-label="Close icon" role="button"
         tabindex="0"></em>
       <div class="lightbox__prev" aria-label="Previous image" role="button" tabindex="0">

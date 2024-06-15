@@ -1,14 +1,11 @@
-import { getPhotographers} from '../templates/photographer.js';
+import { getPhotographers } from '../templates/photographer.js';
 
 // Fonction pour créer un modèle de photographe à partir des données
 function photographerTemplate(data) {
-    const { name, portrait, tagline, city, country, } = data;
+    const { name, portrait, tagline, city, country } = data;
     const picture = `assets/photographers/${portrait}`;
 
-
-
     function getProfileDOM() {
-        
         const header = document.querySelector('.photograph-header .photographer-info');
         const headerPortrait = document.querySelector('.photograph-header');
 
@@ -26,7 +23,7 @@ function photographerTemplate(data) {
 
         const portraitElement = document.createElement('img');
         portraitElement.setAttribute("src", picture);
-        portraitElement.setAttribute("alt", ""); // Texte alternatif vide pour l'accessibilité
+        portraitElement.setAttribute("alt", "Portrait de " + name); // Texte alternatif descriptif
         portraitElement.classList.add('photographer-portrait'); // Ajoute une classe CSS
 
         header.appendChild(nameElement);
@@ -35,7 +32,7 @@ function photographerTemplate(data) {
         headerPortrait.appendChild(portraitElement);
     }
 
-    return {getProfileDOM };
+    return { getProfileDOM };
 }
 
 // Fonction pour afficher les informations du photographe sur la page
@@ -99,23 +96,29 @@ function mediaFactory(media, photographerName) {
     const mediaSrc = media.image ? `${basePath}${media.image}` : `${basePath}${media.video}`;
 
     return `
-        <div class="media-item" data-id="${media.id}">
-            ${mediaType === 'image' ? `<img class="media-image" src="${mediaSrc}" alt="${media.title}" class="media-click">` : `
-                <video class="media-video" controls class="media-click">
-                    <source src="${mediaSrc}" type="video/mp4">
-                    Votre navigateur ne supporte pas la vidéo.
-                </video>
+        <article class="media-item" data-id="${media.id}" tabindex="0" aria-labelledby="media-title-${media.id}" aria-describedby="media-description-${media.id}">
+            ${mediaType === 'image' ? `
+                <img class="media-image media-click" src="${mediaSrc}" alt="${media.title}">
+            ` : `
+                <div class="video-container">
+                    <video class="media-video media-click">
+                        <source src="${mediaSrc}" type="video/mp4">
+                        Votre navigateur ne supporte pas la vidéo.
+                    </video>
+                    <div class="video-overlay" tabindex="-1"></div>
+                </div>
             `}
             <div class="media-info">
-                <p class="media-title">${media.title}</p>
-                <div class="media-likes">
+                <p class="media-title" id="media-title-${media.id}">${media.title}</p>
+                <div class="media-likes" id="media-description-${media.id}">
                     <span class="media-likes-count">${media.likes}</span>
-                    <em class="fa-solid fa-heart" aria-label="likes"></em>
+                    <em class="fa-solid fa-heart" aria-label="likes" tabindex="0"></em>
                 </div>
             </div>
-        </div>
+        </article>
     `;
 }
+
 
 // Fonction pour gérer l'incrémentation des likes
 function handleLike(event) {
@@ -158,7 +161,6 @@ function openLightbox(index) {
     lightbox.setAttribute('aria-hidden', 'false');
     showMedia(index);
 }
-
 
 // Fonction pour fermer la lightbox
 function closeLightbox() {
@@ -229,7 +231,6 @@ document.addEventListener('keydown', function(event) {
     }
 });
 
-// Fonction pour initialiser les médias pour la lightbox
 function initLightboxMedia() {
     const mediaElements = document.querySelectorAll('.media-item');
     currentMediaList = []; // Réinitialiser le tableau
@@ -246,7 +247,18 @@ function initLightboxMedia() {
                 type: 'image'
             });
 
-            img.addEventListener('click', () => openLightbox(index));
+            img.addEventListener('click', (event) => {
+                if (!event.target.closest('.media-likes')) {
+                    openLightbox(index);
+                }
+            });
+
+            // Ajout de la navigation clavier pour les images
+            mediaElement.addEventListener('keydown', (event) => {
+                if ((event.key === 'Enter' || event.key === ' ') && !event.target.closest('.media-likes')) {
+                    openLightbox(index);
+                }
+            });
         } else if (video) {
             const src = video.querySelector('source').src;
             currentMediaList.push({
@@ -255,12 +267,26 @@ function initLightboxMedia() {
                 type: 'video'
             });
 
-            video.addEventListener('click', () => openLightbox(index));
+            // Ajouter un écouteur d'événement sur l'overlay pour ouvrir la lightbox
+            const videoOverlay = mediaElement.querySelector('.video-overlay');
+            videoOverlay.addEventListener('click', (event) => {
+                if (!event.target.closest('.media-likes')) {
+                    openLightbox(index);
+                }
+            });
+
+            // Ajout de la navigation clavier pour les vidéos
+            mediaElement.addEventListener('keydown', (event) => {
+                if ((event.key === 'Enter' || event.key === ' ') && !event.target.closest('.media-likes')) {
+                    openLightbox(index);
+                }
+            });
         }
     });
 
     console.log('Médias initiaux pour la lightbox:', currentMediaList); // Vérifiez que la liste est correctement remplie
 }
+
 
 // Fonction de tri des médias
 function sortMedia(media, sortBy) {
@@ -287,16 +313,27 @@ function displaySortedMedia(media, photographerName) {
         currentMediaList.push(m); // Ajouter les médias à currentMediaList
     });
 
-        // Ajouter les écouteurs d'événements aux éléments médias
-        const mediaElements = document.querySelectorAll('.media-click');
-        mediaElements.forEach((element, index) => {
-            element.addEventListener('click', () => openLightbox(index));
+    // Ajouter les écouteurs d'événements aux éléments médias
+    const mediaElements = document.querySelectorAll('.media-click');
+    mediaElements.forEach((element, index) => {
+        element.addEventListener('click', (event) => {
+            if (!event.target.closest('.media-likes')) {
+                openLightbox(index);
+            }
         });
+    });
 
-            // Ajouter les écouteurs d'événements pour les likes
+    // Ajouter les écouteurs d'événements pour les likes
     const likeButtons = document.querySelectorAll('.fa-heart');
     likeButtons.forEach((button) => {
         button.addEventListener('click', handleLike);
+
+        // Ajout de la navigation clavier pour les likes
+        button.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+                handleLike(event);
+            }
+        });
     });
 
     initLightboxMedia();
@@ -309,5 +346,3 @@ document.addEventListener('DOMContentLoaded', function () {
         initLightboxMedia();
     });
 });
-
-

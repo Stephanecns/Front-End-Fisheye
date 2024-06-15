@@ -226,7 +226,8 @@ textarea {
     transform: translateX(-50%);
     width: 376px;
     height: 89px;
-    border-radius: 5px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
     background: #DB8876;
     display: flex;
     align-items: center;

@@ -2,48 +2,64 @@ let previouslyFocusedElement;
 
 // Fonction pour afficher la modale de contact
 function displayModal() {
-    const modal = document.getElementById("contact_modal"); // Récupérer l'élément de la modale
-    modal.style.display = "block"; // Afficher la modale
-    modal.setAttribute('aria-hidden', 'false'); // Indiquer que la modale est visible pour les technologies d'assistance
+    const modal = document.getElementById("contact_modal");
+    modal.style.display = "block";
+    modal.setAttribute('aria-hidden', 'false');
 
     // Enregistrer l'élément actuellement focalisé pour restaurer le focus plus tard
     previouslyFocusedElement = document.activeElement;
 
     // Mettre le focus sur le premier champ de la modale
-    const firstFocusableElement = modal.querySelector('input, textarea, button'); // Trouver le premier champ focusable
-    firstFocusableElement.focus(); // Mettre le focus sur ce champ
+    const firstFocusableElement = modal.querySelector('input, textarea, button');
+    firstFocusableElement.focus();
+
+    // Ajouter l'écouteur d'événements pour fermer avec Échap
+    document.addEventListener('keydown', handleEscapeKey);
 }
 
 // Fonction pour fermer la modale de contact
 function closeModal() {
-    const modal = document.getElementById("contact_modal"); // Récupérer l'élément de la modale
-    modal.style.display = "none"; // Masquer la modale
-    modal.setAttribute('aria-hidden', 'true'); // Indiquer que la modale est cachée pour les technologies d'assistance
+    const modal = document.getElementById("contact_modal");
+    modal.style.display = "none";
+    modal.setAttribute('aria-hidden', 'true');
 
     // Restaurer le focus à l'élément précédemment focalisé
     if (previouslyFocusedElement) {
-        previouslyFocusedElement.focus(); // Restaurer le focus sur l'élément précédent
+        previouslyFocusedElement.focus();
+    }
+
+    // Supprimer l'écouteur d'événements pour fermer avec Échap
+    document.removeEventListener('keydown', handleEscapeKey);
+}
+
+// Fonction pour gérer la touche Échap
+function handleEscapeKey(event) {
+    if (event.key === 'Escape') {
+        closeModal();
     }
 }
 
 // Ajouter un écouteur d'événement pour gérer l'affichage de la modale au chargement du DOM
 document.addEventListener('DOMContentLoaded', function () {
-    const openModalButton = document.querySelector('.open-modal-button'); // Remplacez par le sélecteur de votre bouton pour ouvrir la modale
-    const closeModalIcon = document.querySelector('.modal img[alt="Close icon"]'); // Sélecteur pour l'icône de fermeture
+    const contactButton = document.querySelector('.contact_button');
+    const closeModalIcon = document.querySelector('.modal img[alt="Close icon"]');
 
-    if (openModalButton) {
-        openModalButton.addEventListener('click', displayModal);
+    if (contactButton) {
+        contactButton.addEventListener('click', function(event) {
+            event.preventDefault();
+            displayModal();
+        });
     }
 
     if (closeModalIcon) {
         closeModalIcon.addEventListener('click', closeModal);
     }
 
-    const contactForm = document.getElementById("contactForm"); // Récupérer l'élément du formulaire de contact
+    const contactForm = document.getElementById("contactForm");
 
     if (contactForm) {
         contactForm.addEventListener("submit", function(event) {
-            event.preventDefault(); // Empêcher le rechargement de la page lors de la soumission du formulaire
+            event.preventDefault();
 
             // Récupérer les valeurs des champs du formulaire
             const firstName = document.getElementById("firstNameUser").value;
