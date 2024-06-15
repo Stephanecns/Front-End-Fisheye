@@ -52,3 +52,8 @@ document.addEventListener('DOMContentLoaded', function () {
         closeModal();
     });
 });
+
+
+// Rendre les fonctions globales
+window.displayModal = displayModal;
+window.closeModal = closeModal;

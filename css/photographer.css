@@ -243,7 +243,7 @@ textarea {
     line-height: normal;
 }
 
-.total-likes i {
+.total-likes em {
     color: #000;
     margin-left: 10px;
     font-size: 21px;

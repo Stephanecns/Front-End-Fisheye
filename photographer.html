@@ -21,13 +21,12 @@
       <div class="photographer-info">
       </div>
       <button class="contact_button" onclick="displayModal()">Contactez-moi</button>
-      <img class="photographer-portrait" alt="Portrait du photographe">
     </div>
 
     <div class="total-likes-price">
       <span class="total-likes">
         <span id="total-likes-count"></span>
-        <i class="fa-solid fa-heart"></i>
+        <em class="fa-solid fa-heart"></em>
       </span>
       <span id="price-per-day"></span>
     </div>
@@ -80,12 +79,12 @@
   <!-- Lightbox HTML -->
   <div id="lightbox-container">
     <div id="lightbox" class="modal" aria-hidden="true" role="dialog" aria-label="Image closeup view">
-      <i class="fa-solid fa-xmark iconColor" onclick="closeLightbox()" aria-label="Close icon"></i>
-      <div class="lightbox__prev" aria-label="Previous image" onclick="prevMedia()">
-        <i class="fa-solid fa-chevron-left"></i>
+      <em class="fa-solid fa-xmark iconColor" onclick="closeLightbox()" aria-label="Close icon" role="button" tabindex="0"></em>
+      <div class="lightbox__prev" aria-label="Previous image" onclick="prevMedia()" role="button" tabindex="0">
+        <em class="fa-solid fa-chevron-left"></em>
       </div>
-      <div class="lightbox__next" aria-label="Next image" onclick="nextMedia()">
-        <i class="fa-solid fa-chevron-right"></i>
+      <div class="lightbox__next" aria-label="Next image" onclick="nextMedia()" role="button" tabindex="0">
+        <em class="fa-solid fa-chevron-right"></em>
       </div>
       <div class="lightbox__content"></div>
       <div class="lightbox__caption" aria-live="polite"></div>
@@ -95,8 +94,8 @@
 
 
 
-  <script src="/scripts/pages/photographer.js"></script>
-  <script src="/scripts/utils/contactForm.js"></script>
+  <script type="module" src="/scripts/pages/photographer.js"></script>
+  <script type="module" src="/scripts/utils/contactForm.js"></script>
 </body>
 
 </html>

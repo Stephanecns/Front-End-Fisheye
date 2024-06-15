@@ -1,67 +1,16 @@
-// Fonction pour récupérer les données des photographes depuis un fichier JSON
-async function getPhotographers() {
-    try {
-        const response = await fetch('data/photographers.json');
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        console.log("Données récupérées dans getPhotographers :", data);
-        return data; // Assurez-vous que l'objet renvoyé contient photographers et media
-    } catch (error) {
-        console.error("Erreur lors de la récupération des données : ", error);
-    }
-}
+import { getPhotographers} from '../templates/photographer.js';
 
 // Fonction pour créer un modèle de photographe à partir des données
 function photographerTemplate(data) {
-    const { name, portrait, id, tagline, city, country, price } = data;
+    const { name, portrait, tagline, city, country, } = data;
     const picture = `assets/photographers/${portrait}`;
 
-    function getUserCardDOM() {
-        const article = document.createElement('article');
-        article.classList.add('photographer-card'); // Ajoute une classe CSS
 
-        const link = document.createElement('a');
-        link.setAttribute('href', `photographer.html?id=${id}`);
-        link.setAttribute('aria-label', `Voir le profil de ${name}`);
-        link.setAttribute('tabindex', '0'); // Rendre le lien focusable
-        link.classList.add('photographer-link'); // Ajoute une classe CSS
-
-        const img = document.createElement('img');
-        img.setAttribute("src", picture);
-        img.setAttribute("alt", ""); // Texte alternatif vide pour l'accessibilité
-        img.classList.add('photographer-portrait'); // Ajoute une classe CSS
-
-        const h2 = document.createElement('h2');
-        h2.textContent = name;
-        h2.classList.add('photographer-name'); // Ajoute une classe CSS
-
-        const pTagline = document.createElement('p');
-        pTagline.textContent = tagline;
-        pTagline.classList.add('photographer-tagline'); // Ajoute une classe CSS
-
-        const pLocation = document.createElement('p');
-        pLocation.textContent = `${city}, ${country}`;
-        pLocation.classList.add('photographer-location'); // Ajoute une classe CSS
-
-        const pPrice = document.createElement('p');
-        pPrice.textContent = `${price}€/heure`;
-        pPrice.classList.add('photographer-price'); // Ajoute une classe CSS
-
-        link.appendChild(img);
-        link.appendChild(h2);
-
-        article.appendChild(link);
-        article.appendChild(pLocation);
-        article.appendChild(pTagline);
-        article.appendChild(pPrice);
-
-        return article;
-    }
 
     function getProfileDOM() {
+        
         const header = document.querySelector('.photograph-header .photographer-info');
+        const headerPortrait = document.querySelector('.photograph-header');
 
         const nameElement = document.createElement('h2');
         nameElement.textContent = name;
@@ -75,17 +24,18 @@ function photographerTemplate(data) {
         taglineElement.textContent = tagline;
         taglineElement.classList.add('photographer-tagline'); // Ajoute une classe CSS
 
-        const portraitElement = document.querySelector('.photographer-portrait');
+        const portraitElement = document.createElement('img');
         portraitElement.setAttribute("src", picture);
-        portraitElement.setAttribute("alt", `Portrait de ${name}`);
+        portraitElement.setAttribute("alt", ""); // Texte alternatif vide pour l'accessibilité
         portraitElement.classList.add('photographer-portrait'); // Ajoute une classe CSS
 
         header.appendChild(nameElement);
         header.appendChild(locationElement);
         header.appendChild(taglineElement);
+        headerPortrait.appendChild(portraitElement);
     }
 
-    return { name, picture, getUserCardDOM, getProfileDOM };
+    return {getProfileDOM };
 }
 
 // Fonction pour afficher les informations du photographe sur la page
@@ -151,8 +101,8 @@ function mediaFactory(media, photographerName) {
 
     return `
         <div class="media-item" data-id="${media.id}">
-            ${mediaType === 'image' ? `<img class="media-image" src="${mediaSrc}" alt="${media.title}" onclick="openLightbox(${media.id})">` : `
-                <video class="media-video" controls onclick="openLightbox(${media.id})">
+            ${mediaType === 'image' ? `<img class="media-image" src="${mediaSrc}" alt="${media.title}" onclick="openLightbox(${currentMediaList.length})">` : `
+                <video class="media-video" controls onclick="openLightbox(${currentMediaList.length})">
                     <source src="${mediaSrc}" type="video/mp4">
                     Votre navigateur ne supporte pas la vidéo.
                 </video>
@@ -161,7 +111,7 @@ function mediaFactory(media, photographerName) {
                 <p class="media-title">${media.title}</p>
                 <div class="media-likes">
                     <span class="media-likes-count">${media.likes}</span>
-                    <i class="fa-solid fa-heart" aria-label="likes" onclick="handleLike(event)"></i>
+                    <em class="fa-solid fa-heart" aria-label="likes" onclick="handleLike(event)"></em>
                 </div>
             </div>
         </div>
@@ -170,6 +120,7 @@ function mediaFactory(media, photographerName) {
 
 // Fonction pour gérer l'incrémentation des likes
 function handleLike(event) {
+    console.log('handleLike a été appelée'); // Ajoutez ce log
     const likeElement = event.target;
     const likesCountElement = likeElement.previousElementSibling;
     const likesCount = parseInt(likesCountElement.textContent);
@@ -182,6 +133,8 @@ function handleLike(event) {
     }
 }
 
+window.handleLike = handleLike;
+
 // Fonction pour mettre à jour les likes des médias
 function updateMediaLikes(mediaId, newLikesCount) {
     const mediaElement = document.querySelector(`.media-item[data-id='${mediaId}'] .media-likes-count`);
@@ -189,6 +142,8 @@ function updateMediaLikes(mediaId, newLikesCount) {
         mediaElement.textContent = newLikesCount;
     }
 }
+
+window.updateMediaLikes = updateMediaLikes;
 
 // Fonction pour calculer et mettre à jour le nombre total de likes
 function updateTotalLikes() {
@@ -208,6 +163,11 @@ let currentMediaList = [];
 
 // Fonction pour ouvrir la lightbox
 function openLightbox(index) {
+    console.log('Index passé à openLightbox:', index); // Vérifiez l'index
+    if (index < 0 || index >= currentMediaList.length) {
+        console.error('Index hors limites dans openLightbox');
+        return;
+    }
     const lightbox = document.getElementById('lightbox-container');
     lightbox.style.display = 'block';
     lightbox.setAttribute('aria-hidden', 'false');
@@ -223,8 +183,16 @@ function closeLightbox() {
 
 // Fonction pour afficher un média spécifique dans la lightbox
 function showMedia(index) {
+    console.log('Affichage du média à l\'index:', index); // Message de débogage pour vérifier l'index
     const lightboxContent = document.querySelector('.lightbox__content');
     const lightboxCaption = document.querySelector('.lightbox__caption');
+
+    // Vérifiez que l'index est valide
+    if (index < 0 || index >= currentMediaList.length) {
+        console.error('Index hors limites');
+        return;
+    }
+
     const media = currentMediaList[index];
 
     // Assurez-vous d'utiliser les bonnes propriétés des objets médias
@@ -235,6 +203,9 @@ function showMedia(index) {
                                         <source src="${media.src}" type="video/mp4">
                                         Votre navigateur ne supporte pas la vidéo.
                                      </video>`;
+    } else {
+        console.error('Type de média inconnu');
+        return;
     }
 
     lightboxCaption.textContent = media.title;
@@ -272,7 +243,7 @@ document.addEventListener('keydown', function(event) {
 // Fonction pour initialiser les médias pour la lightbox
 function initLightboxMedia() {
     const mediaElements = document.querySelectorAll('.media-item');
-    currentMediaList = [];
+    currentMediaList = []; // Réinitialiser le tableau
 
     mediaElements.forEach((mediaElement, index) => {
         const img = mediaElement.querySelector('img');
@@ -298,6 +269,8 @@ function initLightboxMedia() {
             video.addEventListener('click', () => openLightbox(index));
         }
     });
+
+    console.log('Médias initiaux pour la lightbox:', currentMediaList); // Vérifiez que la liste est correctement remplie
 }
 
 // Fonction de tri des médias
@@ -319,12 +292,14 @@ function displaySortedMedia(media, photographerName) {
     const mediaGallery = document.querySelector('.media-gallery');
     mediaGallery.innerHTML = '';
 
-    media.forEach(m => {
+    media.forEach((m, index) => {
         const mediaElement = mediaFactory(m, photographerName);
         mediaGallery.innerHTML += mediaElement;
+        currentMediaList.push(m); // Ajouter les médias à currentMediaList
     });
 
     initLightboxMedia();
+    console.log('Médias affichés et lightbox initialisée'); // Message de débogage
 }
 
 // Appeler initLightboxMedia après que tous les médias soient rendus
@@ -333,3 +308,11 @@ document.addEventListener('DOMContentLoaded', function () {
         initLightboxMedia();
     });
 });
+
+
+// Rendre les fonctions globales
+window.openLightbox = openLightbox;
+window.closeLightbox = closeLightbox;
+window.prevMedia = prevMedia;
+window.nextMedia = nextMedia;
+

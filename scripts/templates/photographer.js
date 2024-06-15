@@ -1,5 +1,20 @@
+// Fonction pour récupérer les données des photographes depuis un fichier JSON
+export async function getPhotographers() {
+    try {
+        const response = await fetch('data/photographers.json');
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        console.log("Données récupérées dans getPhotographers :", data);
+        return data; // Assurez-vous que l'objet renvoyé contient photographers et media
+    } catch (error) {
+        console.error("Erreur lors de la récupération des données : ", error);
+    }
+}
+
 // Fonction pour créer un modèle de photographe à partir des données
-function photographerTemplate(data) {
+export function photographerTemplate(data) {
     const { name, portrait, id, tagline, city, country, price } = data;
     const picture = `assets/photographers/${portrait}`;
 
@@ -45,5 +60,5 @@ function photographerTemplate(data) {
         return article;
     }
 
-    return { name, picture, getUserCardDOM };
+    return {name, picture, tagline, city, country, id, price, getUserCardDOM };
 }
