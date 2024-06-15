@@ -26,34 +26,42 @@ function closeModal() {
     }
 }
 
-// Ajouter un écouteur d'événement pour gérer la soumission du formulaire après le chargement du DOM
+// Ajouter un écouteur d'événement pour gérer l'affichage de la modale au chargement du DOM
 document.addEventListener('DOMContentLoaded', function () {
+    const openModalButton = document.querySelector('.open-modal-button'); // Remplacez par le sélecteur de votre bouton pour ouvrir la modale
+    const closeModalIcon = document.querySelector('.modal img[alt="Close icon"]'); // Sélecteur pour l'icône de fermeture
+
+    if (openModalButton) {
+        openModalButton.addEventListener('click', displayModal);
+    }
+
+    if (closeModalIcon) {
+        closeModalIcon.addEventListener('click', closeModal);
+    }
+
     const contactForm = document.getElementById("contactForm"); // Récupérer l'élément du formulaire de contact
 
-    contactForm.addEventListener("submit", function(event) {
-        event.preventDefault(); // Empêcher le rechargement de la page lors de la soumission du formulaire
+    if (contactForm) {
+        contactForm.addEventListener("submit", function(event) {
+            event.preventDefault(); // Empêcher le rechargement de la page lors de la soumission du formulaire
 
-        // Récupérer les valeurs des champs du formulaire
-        const firstName = document.getElementById("firstNameUser").value;
-        const lastName = document.getElementById("lastNameUser").value;
-        const email = document.getElementById("emailUser").value;
-        const message = document.getElementById("message").value;
+            // Récupérer les valeurs des champs du formulaire
+            const firstName = document.getElementById("firstNameUser").value;
+            const lastName = document.getElementById("lastNameUser").value;
+            const email = document.getElementById("emailUser").value;
+            const message = document.getElementById("message").value;
 
-        // Afficher les valeurs dans la console
-        console.log("Prénom:", firstName);
-        console.log("Nom:", lastName);
-        console.log("E-mail:", email);
-        console.log("Message:", message);
+            // Afficher les valeurs dans la console
+            console.log("Prénom:", firstName);
+            console.log("Nom:", lastName);
+            console.log("E-mail:", email);
+            console.log("Message:", message);
 
-        // Réinitialiser le formulaire après la soumission
-        contactForm.reset();
+            // Réinitialiser le formulaire après la soumission
+            contactForm.reset();
 
-        // Fermer la modale après la soumission
-        closeModal();
-    });
+            // Fermer la modale après la soumission
+            closeModal();
+        });
+    }
 });
-
-
-// Rendre les fonctions globales
-window.displayModal = displayModal;
-window.closeModal = closeModal;

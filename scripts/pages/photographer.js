@@ -132,18 +132,6 @@ function handleLike(event) {
     }
 }
 
-
-
-// Fonction pour mettre à jour les likes des médias
-function updateMediaLikes(mediaId, newLikesCount) {
-    const mediaElement = document.querySelector(`.media-item[data-id='${mediaId}'] .media-likes-count`);
-    if (mediaElement) {
-        mediaElement.textContent = newLikesCount;
-    }
-}
-
-
-
 // Fonction pour calculer et mettre à jour le nombre total de likes
 function updateTotalLikes() {
     const likesElements = document.querySelectorAll('.media-likes-count');
@@ -305,6 +293,12 @@ function displaySortedMedia(media, photographerName) {
             element.addEventListener('click', () => openLightbox(index));
         });
 
+            // Ajouter les écouteurs d'événements pour les likes
+    const likeButtons = document.querySelectorAll('.fa-heart');
+    likeButtons.forEach((button) => {
+        button.addEventListener('click', handleLike);
+    });
+
     initLightboxMedia();
     console.log('Médias affichés et lightbox initialisée'); // Message de débogage
 }
@@ -317,8 +311,3 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 
-// Rendre les fonctions globales
-
-
-window.handleLike = handleLike;
-window.updateMediaLikes = updateMediaLikes;
