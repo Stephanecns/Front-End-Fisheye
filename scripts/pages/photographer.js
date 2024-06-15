@@ -93,7 +93,6 @@ async function displayPhotographerData() {
     }
 }
 
-// Fonction pour créer un élément média avec le nombre de likes et le bouton de like
 function mediaFactory(media, photographerName) {
     const basePath = `assets/FishEye_Photos/Sample Photos/${photographerName}/`;
     const mediaType = media.image ? 'image' : 'video';
@@ -101,8 +100,8 @@ function mediaFactory(media, photographerName) {
 
     return `
         <div class="media-item" data-id="${media.id}">
-            ${mediaType === 'image' ? `<img class="media-image" src="${mediaSrc}" alt="${media.title}" onclick="openLightbox(${currentMediaList.length})">` : `
-                <video class="media-video" controls onclick="openLightbox(${currentMediaList.length})">
+            ${mediaType === 'image' ? `<img class="media-image" src="${mediaSrc}" alt="${media.title}" class="media-click">` : `
+                <video class="media-video" controls class="media-click">
                     <source src="${mediaSrc}" type="video/mp4">
                     Votre navigateur ne supporte pas la vidéo.
                 </video>
@@ -111,7 +110,7 @@ function mediaFactory(media, photographerName) {
                 <p class="media-title">${media.title}</p>
                 <div class="media-likes">
                     <span class="media-likes-count">${media.likes}</span>
-                    <em class="fa-solid fa-heart" aria-label="likes" onclick="handleLike(event)"></em>
+                    <em class="fa-solid fa-heart" aria-label="likes"></em>
                 </div>
             </div>
         </div>
@@ -133,7 +132,7 @@ function handleLike(event) {
     }
 }
 
-window.handleLike = handleLike;
+
 
 // Fonction pour mettre à jour les likes des médias
 function updateMediaLikes(mediaId, newLikesCount) {
@@ -143,7 +142,7 @@ function updateMediaLikes(mediaId, newLikesCount) {
     }
 }
 
-window.updateMediaLikes = updateMediaLikes;
+
 
 // Fonction pour calculer et mettre à jour le nombre total de likes
 function updateTotalLikes() {
@@ -163,9 +162,7 @@ let currentMediaList = [];
 
 // Fonction pour ouvrir la lightbox
 function openLightbox(index) {
-    console.log('Index passé à openLightbox:', index); // Vérifiez l'index
     if (index < 0 || index >= currentMediaList.length) {
-        console.error('Index hors limites dans openLightbox');
         return;
     }
     const lightbox = document.getElementById('lightbox-container');
@@ -174,12 +171,14 @@ function openLightbox(index) {
     showMedia(index);
 }
 
+
 // Fonction pour fermer la lightbox
 function closeLightbox() {
     const lightbox = document.getElementById('lightbox-container');
     lightbox.style.display = 'none';
     lightbox.setAttribute('aria-hidden', 'true');
 }
+document.querySelector('.fa-xmark.iconColor').addEventListener('click', closeLightbox);
 
 // Fonction pour afficher un média spécifique dans la lightbox
 function showMedia(index) {
@@ -218,6 +217,7 @@ function prevMedia() {
         showMedia(currentMediaIndex - 1);
     }
 }
+document.querySelector('.lightbox__prev').addEventListener('click', prevMedia);
 
 // Fonction pour afficher le média suivant
 function nextMedia() {
@@ -225,6 +225,7 @@ function nextMedia() {
         showMedia(currentMediaIndex + 1);
     }
 }
+document.querySelector('.lightbox__next').addEventListener('click', nextMedia);
 
 // Ajout des événements de navigation clavier
 document.addEventListener('keydown', function(event) {
@@ -292,11 +293,17 @@ function displaySortedMedia(media, photographerName) {
     const mediaGallery = document.querySelector('.media-gallery');
     mediaGallery.innerHTML = '';
 
-    media.forEach((m, index) => {
+    media.forEach((m) => {
         const mediaElement = mediaFactory(m, photographerName);
         mediaGallery.innerHTML += mediaElement;
         currentMediaList.push(m); // Ajouter les médias à currentMediaList
     });
+
+        // Ajouter les écouteurs d'événements aux éléments médias
+        const mediaElements = document.querySelectorAll('.media-click');
+        mediaElements.forEach((element, index) => {
+            element.addEventListener('click', () => openLightbox(index));
+        });
 
     initLightboxMedia();
     console.log('Médias affichés et lightbox initialisée'); // Message de débogage
@@ -311,8 +318,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 // Rendre les fonctions globales
-window.openLightbox = openLightbox;
-window.closeLightbox = closeLightbox;
-window.prevMedia = prevMedia;
-window.nextMedia = nextMedia;
 
+
+window.handleLike = handleLike;
+window.updateMediaLikes = updateMediaLikes;

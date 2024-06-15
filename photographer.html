@@ -11,18 +11,23 @@
 </head>
 
 <body>
+
   <header>
     <a href="./index.html">
       <img src="assets/images/logo.png" class="logo" alt="fisheye logo">
     </a>
   </header>
+
   <main id="main">
+
+    <!-- Présentation phtographe-->
     <div class="photograph-header">
       <div class="photographer-info">
       </div>
       <button class="contact_button" onclick="displayModal()">Contactez-moi</button>
     </div>
 
+    <!-- encart le tarif journalier + likes-->
     <div class="total-likes-price">
       <span class="total-likes">
         <span id="total-likes-count"></span>
@@ -30,7 +35,6 @@
       </span>
       <span id="price-per-day"></span>
     </div>
-
 
     <!-- Dislay media -->
     <div class="photographer-works">
@@ -45,6 +49,7 @@
       <div class="media-gallery">
       </div>
     </div>
+
   </main>
 
   <!-- Modal contact + form -->
@@ -79,11 +84,12 @@
   <!-- Lightbox HTML -->
   <div id="lightbox-container">
     <div id="lightbox" class="modal" aria-hidden="true" role="dialog" aria-label="Image closeup view">
-      <em class="fa-solid fa-xmark iconColor" onclick="closeLightbox()" aria-label="Close icon" role="button" tabindex="0"></em>
-      <div class="lightbox__prev" aria-label="Previous image" onclick="prevMedia()" role="button" tabindex="0">
+      <em class="fa-solid fa-xmark iconColor" aria-label="Close icon" role="button"
+        tabindex="0"></em>
+      <div class="lightbox__prev" aria-label="Previous image" role="button" tabindex="0">
         <em class="fa-solid fa-chevron-left"></em>
       </div>
-      <div class="lightbox__next" aria-label="Next image" onclick="nextMedia()" role="button" tabindex="0">
+      <div class="lightbox__next" aria-label="Next image" role="button" tabindex="0">
         <em class="fa-solid fa-chevron-right"></em>
       </div>
       <div class="lightbox__content"></div>
@@ -91,11 +97,9 @@
     </div>
   </div>
 
-
-
-
   <script type="module" src="/scripts/pages/photographer.js"></script>
-  <script type="module" src="/scripts/utils/contactForm.js"></script>
+  <script src="/scripts/utils/contactForm.js"></script>
+
 </body>
 
 </html>
