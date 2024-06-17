@@ -5,6 +5,7 @@ function photographerTemplate(data) {
     const { name, portrait, tagline, city, country } = data;
     const picture = `assets/photographers/${portrait}`;
 
+    // Fonction pour générer le DOM du profil du photographe
     function getProfileDOM() {
         const header = document.querySelector('.photograph-header .photographer-info');
         const headerPortrait = document.querySelector('.photograph-header');
@@ -40,6 +41,7 @@ async function displayPhotographerData() {
     const data = await getPhotographers(); // Récupère les données des photographes et des médias
     console.log("Données récupérées :", data);
 
+    //vérifie si les données récupérées sont valides et si elles contiennent les propriétés attendues (photographers et media).
     if (!data || !data.photographers || !data.media) {
         console.error("Aucune donnée récupérée ou format incorrect");
         return;
@@ -57,6 +59,7 @@ async function displayPhotographerData() {
 
     const photographerData = photographers.find(p => p.id === photographerId);
 
+    //vérifie si les données du photographe spécifique ont été trouvées dans la liste des photographes.
     if (photographerData) {
         console.log("Photographe trouvé :", photographerData);
 
@@ -90,6 +93,7 @@ async function displayPhotographerData() {
     }
 }
 
+// Fonction pour créer l'HTML pour chaque média (image ou vidéo)
 function mediaFactory(media, photographerName) {
     const basePath = `assets/FishEye_Photos/Sample Photos/${photographerName}/`;
     const mediaType = media.image ? 'image' : 'video';
@@ -148,8 +152,8 @@ function updateTotalLikes() {
 }
 
 // Variables pour stocker l'état de la lightbox
-let currentMediaIndex = -1;
-let currentMediaList = [];
+let currentMediaIndex = -1; //Initialisée à -1 pour indiquer qu'aucun média n'est actuellement sélectionné
+let currentMediaList = []; // Initialisé à un tableau vide pour être rempli plus tard
 
 // Fonction pour ouvrir la lightbox
 function openLightbox(index) {
@@ -184,7 +188,7 @@ function showMedia(index) {
 
     const media = currentMediaList[index];
 
-    // Assurez-vous d'utiliser les bonnes propriétés des objets médias
+    //vérifie le type de média (image ou vidéo) pour déterminer quel type d'élément HTML doit être créé et affiché dans la lightbox.
     if (media.type === 'image') {
         lightboxContent.innerHTML = `<img src="${media.src}" alt="${media.title}">`;
     } else if (media.type === 'video') {
@@ -231,6 +235,7 @@ document.addEventListener('keydown', function(event) {
     }
 });
 
+// Fonction pour initialiser la liste des médias pour la lightbox
 function initLightboxMedia() {
     const mediaElements = document.querySelectorAll('.media-item');
     currentMediaList = []; // Réinitialiser le tableau
@@ -240,6 +245,7 @@ function initLightboxMedia() {
         const video = mediaElement.querySelector('video');
         const title = mediaElement.querySelector('.media-title').textContent;
 
+        // Vérifie si l'élément est une image
         if (img) {
             currentMediaList.push({
                 src: img.src,

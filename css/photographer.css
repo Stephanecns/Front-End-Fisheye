@@ -15,13 +15,12 @@
     height: 300px;
     margin: 0 100px;
     display: flex;
-    /*Ajout de flexbox pour le container*/
     align-content: center;
     align-items: center;
     justify-content: space-around;
 }
 
-/*Ajout de propriété pour l'image du phtotographe'*/
+
 .photographer-portrait {
     height: 200px;
     width: 200px;
@@ -29,7 +28,7 @@
     object-fit: cover;
 }
 
-/*Modif propriété photographe*/
+
 .photographer-name {
     color: #D3573C;
     font-size: 64px;
@@ -77,7 +76,7 @@
     cursor: pointer;
 }
 
-/**/
+
 .contact_button {
     font-size: 20px;
     font-weight: bold;
@@ -155,7 +154,7 @@ textarea {
     box-sizing: border-box;
 }
 
-/* Styles pour la lightbox */
+
 #lightbox-container {
     position: fixed;
     z-index: 1;
